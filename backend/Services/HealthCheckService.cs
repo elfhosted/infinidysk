@@ -1456,13 +1456,6 @@ public class HealthCheckService : BackgroundService, IHealthCheckQuiescence
                 $"Health check deferred: no STAT progress for {HealthCheckProgressTimeout.TotalMinutes:0} minutes.",
                 ct).ConfigureAwait(false);
         }
-        catch (NoUsenetProvidersConfiguredException)
-        {
-            // Providers were removed or disabled mid-check. That says nothing about this file,
-            // so leave its schedule and history alone; the worker records an infrastructure
-            // failure and the coordinator stays idle until a provider is enabled again.
-            throw;
-        }
         catch (MissingFilePayloadException e)
         {
             await HandleMissingPayloadAsync(davItem, dbClient, e, ct).ConfigureAwait(false);
